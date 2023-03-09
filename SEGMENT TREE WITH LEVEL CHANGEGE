@@ -1,0 +1,119 @@
+/*Author:: Visrut Lukhi
+  NICHE JA BHAI YAHA KUCH NAHI HAI*/
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long int
+#define vll vector<ll>
+#define vpll vector<pair<ll, ll>>
+#define pll pair<ll, ll>
+#define mpll map<ll, ll>
+#define ld long double
+#define float double
+#define f(i, x, n) for (ll i = x; i < n; i++)
+#define rf(i, x, n) for (ll i = x; i >= n; i--)
+#define pb push_back
+#define all(a) (a).begin(), (a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+#define pi (3.141592653589)
+#define watch(x) cerr << (#x) << " is " << (x) << endl
+#define ub upper_bound
+#define lb lower_bound
+#define endl '\n'
+#define Chal_Ab_Code_Dekhle ios_base::sync_with_stdio(false);cin.tie(nullptr);cout.tie(nullptr)
+#ifndef ONLINE_JUDGE
+#include "debug.hpp"
+#else
+#define debug(...) 8
+#endif
+ll fastprime(ll n){ if(n==1) return 1; if(n==0) return 0; f(i, 2, (ll)sqrt(n)) if (n % i == 0) return 0;return 1;}
+ll power(ll n,ll a){ ll res=1; while(n){ if(n%2){ res*=n,a--;} else	{n*=n,a/=2;}} return res;}
+ll modpowe(ll n,ll a,ll p){ ll res=1; while(a){ if(a%2) res= ((res*n)%p) ,a--; else	n=((n*n)%p),a/=2;} return res;}
+ 
+const ll N = 1e5+7;
+vll g[N];
+vll a(1<<17+1);
+vll st(1<<18+1);
+//    xor
+//  or  or
+// 1 6 3 5    
+
+//      or
+//    xor xor
+//  or  or  or
+// 1 6 3 5 2 3
+void build(ll si , ll ss , ll se , ll c){
+    c++;
+    if(ss==se){
+        st[si] = a[ss]; 
+        return;
+    }
+    ll mid = (ss+se)>>1;
+
+    build(2*si , ss , mid , c);
+    build(2*si+1 , mid+1 , se , c);
+
+    if(c%2)
+    st[si] = st[2*si] | st[2*si+1];
+    else 
+    st[si] = st[2*si] ^ st[2*si+1];
+}
+
+void update(ll si ,ll ss , ll se , ll in , ll c){
+    c++;
+    if(ss==se){
+        st[si] = a[ss];
+        // cout << si << endl;
+        return;
+    }
+
+    ll mid = (ss+se)>>1;
+    if(in <= mid) update(2*si , ss , mid , in , c);
+    else update(2*si+1 , mid+1 , se , in ,c);
+    if(c%2)
+    st[si] = st[2*si] | st[2*si+1];
+    else
+    st[si] = st[2*si] ^ st[2*si+1];
+    // cout << si << " " << st[si] << endl;
+}
+void solve()
+{
+    ll k,m;
+    cin >> k >> m;
+    ll p = k;
+    k = 1<<k;
+    for(int i=1 ; i<k+1 ; i++)
+    {cin >> a[i];}
+    cout << endl;
+    if(p%2)
+    build(1 , 1, k , 0);
+    else 
+    build(1,1,k,1);
+    // f(i,0,8)
+    // cout << st[i] << " ";
+    cout << endl;
+    while(m--){
+        ll in , val;
+        cin >> in >> val;
+        a[in] = val;
+        if(p%2==0)
+        update(1,1,k,in,1);
+        else 
+        update(1,1,k,in,0);
+        // f(i,1,8)
+        // cout << st[i] << " ";
+        // cout << endl;
+        cout << st[1] << endl;
+    }
+}
+int main(){
+//#ifndef ONLINE_JUDGE
+//freopen("input.txt","r",stdin);
+//freopen("output.txt","w",stdout);
+//#endif
+Chal_Ab_Code_Dekhle;
+ ll t;
+ t = 1;
+ //cin >> t;
+while(t--)
+solve();
+}
